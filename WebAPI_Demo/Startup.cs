@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace WebAPI_Demo
 {
     public class Startup
@@ -32,7 +34,22 @@ namespace WebAPI_Demo
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            
+
+
+            
+            // ******   CONNECTION STRING  ***** \\
+            // 'database =' can also be stated 'initial catalog'
+            string connstr = @"Data Source = (localdb)\MSSQLLocalDB; Initial Catalog = WebAPI_Demo; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+
+            // ****     tells VS that we are using SQL Server    ****** \\
+            services.AddDbContext<Models.WebServiceDB>(options => options.UseSqlServer(connstr)); 
         }
+
+
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
