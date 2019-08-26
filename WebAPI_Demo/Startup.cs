@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNetCore.Routing;
 
 namespace WebAPI_Demo
 {
@@ -25,6 +27,7 @@ namespace WebAPI_Demo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOData();        /////// ADD THIS 
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -66,12 +69,22 @@ namespace WebAPI_Demo
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
+            app.UseMvc(routeBuilder =>           /// REPLACE APP.USEMVC()
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                // ENABLE THE dependency Injection support for all HTTP routes 
+
+                routeBuilder.EnableDependencyInjection();
+                routeBuilder.Expand().Select().OrderBy().Filter();
+
+
+                //    routes.MapRoute(
+                //        name: "default",
+                //        template: "{controller=Home}/{action=Index}/{id?}");
             });
+            
+
+
+            
         }
     }
 }

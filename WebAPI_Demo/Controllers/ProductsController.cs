@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,8 @@ namespace WebAPI_Demo.Controllers
         }
 
         // GET: api/Products
+
+            [EnableQuery]       /// ADDED WHEN UPDATING STARTUP CONFIGURE METHOD
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {

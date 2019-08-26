@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>WebAPITester</title>
+    <meta charset="utf-8" />
+    <!--
+
+        <script src="Scripts/jquery-1.10.2.js"></script>
+        -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <h2>WebAPITester</h2>
+    <form>
+        <table>
+            <tr>
+                <td>URL:</td>
+                <td><input id="UrlToUse" type="url" style="width:500px" value="http://localhost:24366/api/vendorsdata" /></td>
+            </tr>
+            <tr>
+                <td>Data to send</td>
+                <td><textarea id="DataToSend" rows="10" cols="60"></textarea></td>
+            </tr>
+            <tr>
+                <td>Verb:</td>
+                <td>
+                    <select id="ActionToUse">
+                        <option>GET</option>
+                        <option>POST</option>
+                        <option>PUT</option>
+                        <option>PATCH</option>
+                        <option>DELETE</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button onclick="SendData(); return false;">Send</button>
+                    <span id="status"></span>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <br />
+    Returned Data:
+    <pre id="ReturnedData" style="border:1px solid"></pre>
+
+    <script>
+        function SendData()
+        {
+            $("#ReturnedData").text("");
+            $("#status").text("Sending");
+
+            var dataToSend = $("#DataToSend").val();
+
+            $.ajax({
+                // service URL
+                url: $("#UrlToUse").val(),
+                // content type for data sent: POST, PUT, PATCH
+                contentType: 'application/json',
+                // HTTP method: GET, POST, PUT, PATCH, DELETE
+                type: $("#ActionToUse").val(),
+                // how the ajax function should return data. "json" = JavaScript object
+                dataType: 'json',
+                // the data to send as a JSON string
+                data: dataToSend,
+                // any additional HTTP headers needed. Length is needed for POST, PUT, PATCH
+                headers: { "Content-Length": dataToSend.length },
+
+                // What to do if it all worked!
+                success: function (data) {
+                    $("#status").text("Success!");
+                    $("#ReturnedData").text(JSON.stringify(data, null, 4));
+                    $("#status").text("Done!");
+                },
+                // And what to do if it fails!
+                error: function (jqXHR, ex, msg) {
+                    alert("Error from server: \nStatus: " + jqXHR + " - " +
+                        jqXHR.status + "\nException: " + ex.toString() +
+                        "\nMessage: " + msg +
+                        "\nMessage from server: " + jqXHR.responseText)
+                }
+            });
+
+            $("#status").text("Request sent");
+        }
+
+    </script>
+
+</body>
+</html>
